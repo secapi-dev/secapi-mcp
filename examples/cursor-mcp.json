@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "secapi": {
+      "command": "node",
+      "args": ["../dist/index.js"],
+      "env": {
+        "SECAPI_API_KEY": "your-api-key-here",
+        "SECAPI_DEBUG": "true"
+      }
+    }
+  }
+}
