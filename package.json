@@ -1,6 +1,6 @@
 {
   "name": "secapi-mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Official Model Context Protocol server for secapi.dev — SEC filings, financials, insiders, and institutional holdings as AI-native tools.",
   "type": "module",
   "license": "MIT",

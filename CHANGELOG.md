@@ -1,5 +1,11 @@
 # secapi-mcp
 
+## 0.2.1
+
+### Patch Changes
+
+- 8fa71ff: Publish to npm
+
 ## 0.2.0
 
 ### Minor Changes
