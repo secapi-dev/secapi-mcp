@@ -1,5 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { Config } from "../config/index.js";
+import { createApiCatalog } from "../client/openapi.js";
 import { createSecApiClient } from "../client/secapi-client.js";
 import type { Logger } from "../logging/index.js";
 import { registerTools, toolModules } from "../tools/index.js";
@@ -14,7 +15,10 @@ export function createMcpServer(config: Config, logger: Logger): McpServer {
   });
 
   const client = createSecApiClient(config, logger);
-  registerTools(server, toolModules, client, logger);
+  const api = createApiCatalog(
+    config.openApiUrl ?? `${config.baseUrl.replace(/\/+$/, "")}/api/core/v3/api-docs`,
+  );
+  registerTools(server, toolModules, client, logger, api);
 
   return server;
 }

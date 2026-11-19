@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { formatErrorForLlm } from "../errors/index.js";
 import type { Logger } from "../logging/index.js";
 import { toJsonContent } from "../utils/format.js";
+import type { ApiCatalog } from "../client/openapi.js";
 import type { SecApiClient } from "../client/secapi-client.js";
 import type { ToolContext, ToolDefinition, ToolModule } from "./types.js";
 
@@ -55,8 +56,9 @@ export function registerTools(
   modules: ToolModule[],
   client: SecApiClient,
   logger: Logger,
+  api: ApiCatalog,
 ): void {
-  const ctx: ToolContext = { client, logger };
+  const ctx: ToolContext = { client, logger, api };
 
   for (const mod of modules) {
     for (const tool of mod.tools) {

@@ -12,7 +12,8 @@ This server **never** talks to databases directly — it is a typed, validated i
 
 ## Features
 
-- **9 high-level AI tools** designed for reasoning, not REST endpoint mirroring
+- **10 high-level AI tools** designed for reasoning, not REST endpoint mirroring
+- **Every other endpoint, live** — two tools read the API's published OpenAPI document, so new endpoints are usable without a new release of this server
 - **SDK-first architecture** — all API calls go through `secapi-node`
 - **Zod validation** on every tool input
 - **AI-friendly errors** with categories, suggestions, and retry hints
@@ -128,29 +129,33 @@ Add to Windsurf MCP configuration:
 
 ## Available Tools
 
-| Tool                   | Description                                                         |
-| ---------------------- | ------------------------------------------------------------------- |
-| `search_filings`       | Search SEC filings by ticker/CIK, form type, and date range         |
-| `analyze_filing`       | Get filing metadata and document list for deeper analysis           |
-| `search_companies`     | Search companies by name, ticker, or CIK                            |
-| `company_overview`     | Company profile plus recent filings — ideal research starting point |
-| `company_financials`   | Income statement, balance sheet, or cash flow                       |
-| `company_ratios`       | Financial ratio time series (ROE, margins, liquidity, etc.)         |
-| `insider_trades`       | Insider buying/selling activity from Form 4 filings                 |
-| `search_institutions`  | Find institutional investors (13F filers)                           |
-| `institution_holdings` | 13F portfolio holdings for a given quarter                          |
+| Tool                   | Description                                                              |
+| ---------------------- | ------------------------------------------------------------------------ |
+| `search_filings`       | Search SEC filings by ticker/CIK, form type, and date range              |
+| `analyze_filing`       | Get filing metadata and document list for deeper analysis                |
+| `search_companies`     | Search companies by name, ticker, or CIK                                 |
+| `company_overview`     | Company profile plus recent filings — ideal research starting point      |
+| `latest_financials`    | Latest 10-K/10-Q: income statement, balance sheet and cash flow          |
+| `company_financials`   | One statement over several periods, standardized or as reported          |
+| `company_ratios`       | Financial ratio time series (ROE, margins, liquidity, etc.)              |
+| `insider_trades`       | Insider transactions, per company or market-wide; open-market buys/sells |
+| `search_institutions`  | Find institutional investors (13F filers)                                |
+| `institution_holdings` | 13F portfolio holdings for a given quarter                               |
+| `list_api_endpoints`   | List the API's endpoints and their parameters, from the live docs        |
+| `call_api_endpoint`    | Call any GET endpoint under `/v1/` by path                               |
 
 ## Environment Variables
 
-| Variable             | Required | Default                  | Description                        |
-| -------------------- | -------- | ------------------------ | ---------------------------------- |
-| `SECAPI_API_KEY`     | Yes*     | —                        | API key from secapi.dev            |
-| `SEC_API_KEY`        | Yes*     | —                        | Legacy alias for `SECAPI_API_KEY`  |
-| `SECAPI_BASE_URL`    | No       | `https://api.secapi.dev` | API base URL                       |
-| `SECAPI_TIMEOUT_MS`  | No       | `30000`                  | Request timeout in milliseconds    |
-| `SECAPI_MAX_RETRIES` | No       | `2`                      | Retry count for transient failures |
-| `SECAPI_DEBUG`       | No       | `false`                  | Enable debug logging to stderr     |
-| `SECAPI_USER_AGENT`  | No       | `secapi-mcp/0.1.0`       | User-Agent header                  |
+| Variable             | Required | Default                           | Description                               |
+| -------------------- | -------- | --------------------------------- | ----------------------------------------- |
+| `SECAPI_API_KEY`     | Yes*     | —                                 | API key from secapi.dev                   |
+| `SEC_API_KEY`        | Yes*     | —                                 | Legacy alias for `SECAPI_API_KEY`         |
+| `SECAPI_BASE_URL`    | No       | `https://api.secapi.dev`          | API base URL                              |
+| `SECAPI_OPENAPI_URL` | No       | `<base URL>/api/core/v3/api-docs` | OpenAPI document for `list_api_endpoints` |
+| `SECAPI_TIMEOUT_MS`  | No       | `30000`                           | Request timeout in milliseconds           |
+| `SECAPI_MAX_RETRIES` | No       | `2`                               | Retry count for transient failures        |
+| `SECAPI_DEBUG`       | No       | `false`                           | Enable debug logging to stderr            |
+| `SECAPI_USER_AGENT`  | No       | `secapi-mcp/0.1.0`                | User-Agent header                         |
 
 \* One of `SECAPI_API_KEY` or `SEC_API_KEY` is required.
 
@@ -241,6 +246,9 @@ AI agents work better with semantic, high-level tools. `company_overview` is mor
 
 **Can I self-host?**
 Yes. Set `SECAPI_BASE_URL` if using a custom API deployment.
+
+**The API got a new endpoint. Do I need a new release of this server?**
+No. `list_api_endpoints` reads the API's OpenAPI document at run time (cached for 10 minutes) and `call_api_endpoint` can call any GET path under `/v1/`, so a new endpoint is usable as soon as it is deployed. Add a dedicated tool only when an endpoint deserves a better description, defaults, or a combined response.
 
 **How do I add more tools?**
 See [Adding a New Tool](#adding-a-new-tool). The framework is designed for fast extension.

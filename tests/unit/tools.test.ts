@@ -2,19 +2,21 @@ import { describe, expect, it } from "vitest";
 import { toolModules } from "../../src/tools/index.js";
 
 describe("tool modules", () => {
-  it("registers 9 exemplary tools", () => {
+  it("registers the curated tools and the two live-documentation tools", () => {
     const names = toolModules.flatMap((m) => m.tools.map((t) => t.name));
-    expect(names).toHaveLength(9);
     expect(names).toEqual([
       "search_filings",
       "analyze_filing",
       "search_companies",
       "company_overview",
+      "latest_financials",
       "company_financials",
       "company_ratios",
       "insider_trades",
       "search_institutions",
       "institution_holdings",
+      "list_api_endpoints",
+      "call_api_endpoint",
     ]);
   });
 

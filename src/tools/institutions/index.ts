@@ -43,6 +43,12 @@ export const institutionsTools: ToolModule = {
           .optional()
           .describe('Reporting quarter e.g. "2024-Q3". Defaults to latest available.'),
         limit: z.coerce.number().int().min(1).max(100).default(25),
+        page: z.coerce
+          .number()
+          .int()
+          .min(1)
+          .default(1)
+          .describe("Page of the portfolio, for holdings beyond the first `limit`"),
         sort: z
           .enum(["value", "shares", "weight"])
           .default("value")
@@ -55,9 +61,10 @@ export const institutionsTools: ToolModule = {
       handler: async (input, { client }) => {
         const [profile, holdings] = await Promise.all([
           client.institutions.profile(input.cik, { quarter: input.quarter }),
-          client.institutions.holdings(input.cik, {
+          client.get<unknown>(`/v1/institutions/${encodeURIComponent(input.cik)}/holdings`, {
             quarter: input.quarter,
             limit: input.limit,
+            page: input.page,
             sort: input.sort,
           }),
         ]);

@@ -1,9 +1,12 @@
 import { z, type ZodObject, type ZodRawShape } from "zod";
+import type { ApiCatalog } from "../client/openapi.js";
 import type { SecApiClient } from "../client/secapi-client.js";
 import type { Logger } from "../logging/index.js";
 
 export interface ToolContext {
   client: SecApiClient;
+  /** The API's published endpoint list, for the tools that work off the live documentation. */
+  api: ApiCatalog;
   logger: Logger;
 }
 
