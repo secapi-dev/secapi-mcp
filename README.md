@@ -33,7 +33,7 @@ pnpm add -g secapi-mcp
 npx secapi-mcp
 ```
 
-Requires Node.js 20+.
+Requires Node.js 26+.
 
 ## Quick Start
 
