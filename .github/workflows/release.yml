@@ -1,5 +1,19 @@
 name: Release
 
+# Publishes with npm trusted publishing. Do not set NPM_TOKEN: a stored token
+# overrides the GitHub OIDC credential, and the secapi-mcp token expired on
+# October 12, 2026.
+#
+# One-time setup, as the npm user that owns secapi-mcp:
+#   https://www.npmjs.com/package/secapi-mcp/access
+#   Trusted Publisher → GitHub Actions
+#   Organization or user: secapi-dev
+#   Repository: secapi-mcp
+#   Workflow filename: release.yml
+#   Environment: leave empty
+#   Allowed actions: npm publish
+# npm stage publish alone cannot run `npm publish`.
+
 on:
   push:
     branches: [main]
@@ -22,8 +36,6 @@ jobs:
           check-latest: true
           cache: "npm"
           registry-url: "https://registry.npmjs.org"
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - run: npm ci
 
@@ -36,5 +48,3 @@ jobs:
           title: "chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
